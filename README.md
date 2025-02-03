@@ -1,50 +1,151 @@
-# React + TypeScript + Vite
+# **Botflix**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## **📖 Description**
 
-Currently, two official plugins are available:
+Botflix is a movie search app that integrates with a bot to search for movies based on emotions. Users can interact with the bot to get personalized recommendations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## **🚀 Final Result**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Check out the live version of the app:\
+👉 [botflix.vercel.app](https://botflix.vercel.app/)
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default tseslint.config({
-	languageOptions: {
-		// other options...
-		parserOptions: {
-			project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-			tsconfigRootDir: import.meta.dirname,
-		},
-	},
-});
+## **📜 Prerequisites**
+
+- **Node.js**: Version 22 or above is recommended.\
+  Check your Node version with:
+  ```bash
+  node -v
+  ```
+- **NVM**: Use Node's Long-Term Support version:
+  ```bash
+  nvm use -lts
+  ```
+
+---
+
+## **📂 Folder Structure**
+
+- `app/`: Contains global configuration and providers for the application.
+- `features/`: Main application domains, each with its components, hooks, services, etc.
+- `shared/`: Reusable elements like UI components, hooks, and utilities.
+- `assets/`: Static resources such as images, icons, and styles.
+
+---
+
+## **💻 Available Scripts**
+
+In the project directory, after cloning the repository and installing the dependencies, you can use the following commands:
+
+### **Install Dependencies**
+
+```bash
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### **Start the Development Server**
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+Runs the app in development mode:
 
-export default tseslint.config({
-	// Set the react version
-	settings: { react: { version: "18.3" } },
-	plugins: {
-		// Add the react plugin
-		react,
-	},
-	rules: {
-		// other rules...
-		// Enable its recommended rules
-		...react.configs.recommended.rules,
-		...react.configs["jsx-runtime"].rules,
-	},
-});
+```bash
+npm start
 ```
+
+- Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+- The page will reload automatically if you make changes.
+- You will also see lint errors in the console.
+
+### **Run Tests**
+
+Launch the test runner in interactive watch mode:
+
+```bash
+npm test
+```
+
+### **Fix Linter and Formatting Issues**
+
+To format the code and fix linting issues:
+
+```bash
+npm run format
+npm run lint:fix
+```
+
+---
+
+## **🛠 Tech Stack**
+
+- **React with TypeScript**: For building the UI.
+- **RESTful API**: For fetching movie data.
+- **React Custom Hooks**: For encapsulating reusable logic.
+- **React Router**: For managing navigation.
+- **TanStack Query**: For efficient data fetching and caching.
+- **Tailwind CSS**: For styling components.
+- **Styled Components**: For custom, dynamic styles.
+- **Unit Testing**: For ensuring code reliability.
+- **JSDoc 3**: For documentation generation.
+
+---
+
+## **🌳 GIT Flow**
+
+We use the following branching strategy:
+
+- `master`: Stable production-ready branch.
+- `develop`: Integration branch for features.
+- `feature-branch`: Specific branches for new features or improvements.
+- `hotfix`: For urgent bug fixes in production.
+
+### Useful Commands:
+
+- **Rebase**:
+  ```bash
+  git rebase <branch-name>
+  ```
+- **Cherry-pick**:
+  ```bash
+  git cherry-pick <commit-hash>
+  ```
+
+---
+
+## **💡 Future Improvements**
+
+- Integrate more emotion-based filtering.
+- Add user authentication for personalized recommendations.
+- Improve bot interaction using NLP models.
+
+---
+
+### **👏 Contributing**
+
+Feel free to submit issues or pull requests. Any contribution is appreciated!
+
+---
+
+### **📄 License**
+
+This project is licensed under the MIT License.
+
+---
+
+### **✨ Notes**
+
+If you encounter any issues, please open a GitHub issue or reach out to the maintainers.
+
+---
+
+## **🔗 Links**
+
+- [Project Repository](https://github.com/david-portilla/botflix)
+- [Live Demo](https://botflix.vercel.app/)
+
+---
+
+### **👨‍💻 Author**
+
+This project was created by [David Portilla](https://davidportilla.com/).

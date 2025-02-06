@@ -1,36 +1,21 @@
-import { useMemo } from "react";
-import { Chat } from "../features/chat";
-import { useGlobal } from "./hooks/useGlobal";
-import "./app.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Homepage } from "../shared/pages/Homepage";
+import { MovieDetails } from "../shared/pages/MovieDetails";
 
 export const App = () => {
-	const { openChat, closeChat, isChatOpen, displayName } = useGlobal();
-	const handleToggleChat = () => (isChatOpen ? closeChat() : openChat());
-	const chatComponent = useMemo(() => isChatOpen && <Chat />, [isChatOpen]);
-
-	console.log("App");
+	const queryClient = new QueryClient();
 
 	return (
-		<main>
-			<div>
-				<h1 className="text-2xl font-bold">Botflix Movie App</h1>
-				<h2 className="text-md">Movie search: {displayName || ""}</h2>
-				<a href="#" target="_blank" rel="noopener noreferrer">
-					Link
-				</a>
-				<p className="text-base">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-					quos.
-				</p>
-				<button
-					onClick={handleToggleChat}
-					className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-					aria-label={`${isChatOpen ? "Close" : "Open"} chat`}
-				>
-					{`${isChatOpen ? "Close" : "Open"} Chat`}
-				</button>
-				{chatComponent}
-			</div>
-		</main>
+		<QueryClientProvider client={queryClient}>
+			<main className="flex flex-col">
+				<Router>
+					<Routes>
+						<Route path="/" element={<Homepage />} />
+						<Route path="/movie/:id" element={<MovieDetails />} />
+					</Routes>
+				</Router>
+			</main>
+		</QueryClientProvider>
 	);
 };

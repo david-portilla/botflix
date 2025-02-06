@@ -1,30 +1,39 @@
 @import "tailwindcss";
 
 :root {
-	--btn-primary: #ff5a65;
-	--btn-secondary: #ff5a6580;
-	--black: #242424;
-	--text: #494951;
-	--text-light: #8d8d92;
-	--deep-blue: #172135;
-	--ligth-blue: #edf4fe;
-	--footer: #1c1d24;
-	--sand: #f8f5f2;
-	--white: #fff;
+	--botflix-color: #ec2a1c;
+	--botflix-color-light: #ff4d42;
+	--botflix-color-dark: #d11810;
+	--botflix-color-opacity-10: rgba(236, 42, 28, 0.1);
+	--botflix-color-opacity-20: rgba(236, 42, 28, 0.2);
+
+	--background-primary: #1a1a1a;
+	--background-secondary: #242424;
+	--rating-green: #21d07a;
+	--rating-yellow: #d2d531;
+	--rating-red: #db2360;
+	--overlay-dark: rgba(26, 26, 26, 0.95);
+	--text-primary: #ffffff;
+	--text-secondary: #9ca3af;
+	--border-color: rgba(255, 255, 255, 0.1);
+
+	--header-height: 64px;
+	--header-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+	--search-height: 3.5rem;
+	--search-border-radius: 9999px;
+	--search-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	--search-focus-shadow: 0 0 10px 4px rgba(208, 86, 33, 0.1);
 }
 
 * {
 	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
 }
 
 html {
-	font-size: 62.5%;
 	scroll-behavior: smooth;
-	background-color: var(--black);
-	color-scheme: light dark;
-	background-color: var(--black);
+	color-scheme: dark;
+	background-color: var(--background-primary);
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -36,11 +45,6 @@ body {
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	font-size: 1.6rem; /* 16px */
-	line-height: 1.5;
 	font-family: "Inter", sans-serif;
-}
-
-a {
-	@apply underline text-blue-600 hover:text-blue-800 visited:text-purple-600;
+	color: var(--text-primary);
 }

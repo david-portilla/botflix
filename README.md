@@ -13,6 +13,10 @@ Check out the live version of the app:\
 
 ---
 
+## 📚 Additional Docs
+
+- TODO: Discuss the creative process and solution approach.
+
 ## **📜 Prerequisites**
 
 - **Node.js**: Version 22 or above is recommended.\
@@ -28,6 +32,41 @@ Check out the live version of the app:\
 ---
 
 ## **📂 Folder Structure**
+
+botflix/
+│
+├── docs/
+├── src/
+│ ├── app/
+│ │ ├── hooks/
+│ │ └── providers/
+│ │
+│ ├── features/
+│ │ ├── chat/
+│ │ │ ├── components/
+│ │ │ └── index/
+│ │ │
+│ │ └── search/
+│ │ ├── components/
+│ │ ├── types/
+│ │ └── index/
+│ │
+│ ├── shared/
+│ │ ├── components/
+│ │ ├── hooks/
+│ │ ├── pages/
+│ │ ├── types/
+│ │ ├── utils/
+│ │ └── index/
+│ │
+│ └── assets/
+│ ├── images/
+│ └── styles/
+│
+├── public/
+│ └── images/
+│
+└── README.md
 
 - `app/`: Contains global configuration and providers for the application.
 - `features/`: Main application domains, each with its components, hooks, services, etc.
@@ -118,6 +157,8 @@ We use the following branching strategy:
 - Integrate more emotion-based filtering.
 - Add user authentication for personalized recommendations.
 - Improve bot interaction using NLP models.
+- Add Navlink in header section
+- Add pagination for multiple results
 
 ---
 

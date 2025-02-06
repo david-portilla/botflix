@@ -5,11 +5,12 @@ import { createContext } from "react";
  */
 export interface GlobalContextType {
 	isChatOpen: boolean;
+	displayFeeling: string;
+	displayChatInput: string;
 	openChat: () => void;
 	closeChat: () => void;
-	userNameRef: React.MutableRefObject<string>;
-	setUserName: (name: string) => void;
-	displayName: string;
+	setChatInput: (input: string) => void;
+	setFeelingName: (name: string) => void;
 }
 
 /**
@@ -17,9 +18,10 @@ export interface GlobalContextType {
  */
 export const GlobalContext = createContext<GlobalContextType>({
 	isChatOpen: false,
+	displayFeeling: "",
+	displayChatInput: "",
 	openChat: () => {},
 	closeChat: () => {},
-	userNameRef: { current: "" },
-	setUserName: () => {},
-	displayName: "",
+	setChatInput: () => {},
+	setFeelingName: () => {},
 });

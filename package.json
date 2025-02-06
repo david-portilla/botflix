@@ -12,8 +12,11 @@
 	"dependencies": {
 		"@landbot/core": "^2.7.0",
 		"@tailwindcss/vite": "^4.0.3",
+		"@tanstack/react-query": "^5.66.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"react-router-dom": "^7.1.5",
+		"styled-components": "^6.1.14"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",

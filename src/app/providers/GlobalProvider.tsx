@@ -1,4 +1,4 @@
-import { useState, useRef, ReactNode, useCallback } from "react";
+import { useState, ReactNode, useCallback } from "react";
 import { GlobalContext } from "../providers/GlobalContext";
 
 interface GlobalProviderProps {
@@ -20,8 +20,8 @@ interface GlobalProviderProps {
  */
 export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 	const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
-	const [displayName, setDisplayName] = useState<string>("");
-	const userNameRef = useRef<string>("");
+	const [displayFeeling, setDisplayFeeling] = useState<string>("");
+	const [displayChatInput, setDisplayChatInput] = useState<string>("");
 
 	/**
 	 * Opens the chat modal if it's not already open
@@ -40,8 +40,6 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 	const closeChat = useCallback(() => {
 		if (isChatOpen) {
 			setIsChatOpen(false);
-			userNameRef.current = "";
-			setDisplayName("");
 		}
 	}, [isChatOpen]);
 
@@ -50,11 +48,17 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 	 * @param {string} name - The new user name to set
 	 * @memoized
 	 */
-	const setUserName = useCallback((name: string) => {
-		if (typeof name === "string" && name.trim() !== "") {
-			userNameRef.current = name.trim();
-			setDisplayName(name.trim());
-		}
+	const setFeelingName = useCallback((name: string) => {
+		setDisplayFeeling(name.trim());
+	}, []);
+
+	/**
+	 * Updates the chat input value in both ref and state
+	 * @param {string} input - The new chat input value to set
+	 * @memoized
+	 */
+	const setChatInput = useCallback((input: string) => {
+		setDisplayChatInput(input.trim());
 	}, []);
 
 	return (
@@ -63,9 +67,10 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 				isChatOpen,
 				openChat,
 				closeChat,
-				userNameRef,
-				setUserName,
-				displayName,
+				displayFeeling,
+				setFeelingName,
+				displayChatInput,
+				setChatInput,
 			}}
 		>
 			{children}

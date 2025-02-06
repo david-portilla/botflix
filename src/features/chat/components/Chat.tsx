@@ -9,7 +9,20 @@ import {
 	messagesFilter,
 	scrollBottom,
 } from "../utils/messageUtils";
-import "./chat.css";
+
+import {
+	ChatContainer,
+	ChatWrapper,
+	ChatHeader,
+	MessagesContainer,
+	MessageBubble,
+	MessageContent,
+	InputContainer,
+	Input,
+	SendButton,
+	ButtonsContainer,
+	OptionButton,
+} from "./Chat.styles";
 
 /**
  * Chat component that handles the interaction with Landbot
@@ -33,7 +46,7 @@ export const Chat = React.memo(() => {
 	const [config, setConfig] = useState(null);
 	const [buttons, setButtons] = useState<ChatButton[]>([]);
 	const core = useRef<Core | null>(null);
-	const { closeChat, setUserName } = useGlobal();
+	const { closeChat, setFeelingName, setChatInput } = useGlobal();
 
 	const initializeCore = useCallback(() => {
 		if (config && !core.current) {
@@ -80,6 +93,7 @@ export const Chat = React.memo(() => {
 		if (core.current) {
 			core.current.pipelines.$readableSequence.subscribe(
 				(data: LiveChatMessage) => {
+					// ! TODO: remove this console.log before production
 					console.log(
 						data.author_type
 							? `${data.author_type} response:`
@@ -142,7 +156,6 @@ export const Chat = React.memo(() => {
 	]);
 
 	const fetchConfig = useCallback(async (url: string) => {
-		// TODO: move URL to env file
 		try {
 			const response = await fetch(url);
 			const data = await response.json();
@@ -153,9 +166,7 @@ export const Chat = React.memo(() => {
 	}, []);
 
 	useEffect(() => {
-		fetchConfig(
-			"https://storage.googleapis.com/landbot.online/v3/H-2768940-4PRD73A7U94NPL57/index.json"
-		);
+		fetchConfig(import.meta.env.VITE_LANDBOT_URL);
 	}, [fetchConfig]);
 
 	useEffect(() => {
@@ -174,12 +185,12 @@ export const Chat = React.memo(() => {
 	 */
 	const submit = useCallback(() => {
 		if (input !== "" && core.current) {
-			console.log("submit: ", input);
-			setUserName(input);
+			setFeelingName(input);
 			core.current.sendMessage({ message: input });
-			setInput("");
+			setInput(input);
+			setChatInput(input);
 		}
-	}, [input, setUserName]);
+	}, [input, setFeelingName]);
 
 	/**
 	 * Handles button click events
@@ -213,89 +224,84 @@ export const Chat = React.memo(() => {
 	};
 
 	return (
-		<section id="landbot-app">
-			<div className="chat-container">
-				<div className="landbot-chat">
-					<div className="landbot-header">
-						<h1 className="subtitle">Movie search</h1>
-					</div>
+		<ChatContainer>
+			<ChatWrapper>
+				<ChatHeader>
+					<h1 className="subtitle">Movie AI Consultant</h1>
+				</ChatHeader>
 
-					<div
-						className="landbot-messages-container"
-						id="landbot-messages-container"
-					>
-						{Object.values(messages)
-							.filter(messagesFilter)
-							.sort((a, b) => a.timestamp - b.timestamp)
-							.map((message) => (
-								<article
-									className="media landbot-message"
-									data-author={message.author}
-									key={message.key}
-								>
-									<figure className="media-left landbot-message-avatar">
-										<p className="image is-64x64">
-											<img
-												alt=""
-												className="is-rounded"
-												src="http://i.pravatar.cc/100"
-											/>
-										</p>
-									</figure>
-									<div className="media-content landbot-message-content">
-										<div className="content">
-											<p>{message.text}</p>
-										</div>
+				<MessagesContainer id="landbot-messages-container">
+					{Object.values(messages)
+						.filter(messagesFilter)
+						.sort((a, b) => a.timestamp - b.timestamp)
+						.map((message) => (
+							<MessageBubble
+								data-author={message.author}
+								$isUser={message.author === "user"}
+								key={message.key}
+							>
+								{/* ! TODO: remove this avatar */}
+								<figure className="media-left landbot-message-avatar">
+									<p className="image is-64x64">
+										<img
+											alt=""
+											className="is-rounded"
+											src="http://i.pravatar.cc/100"
+										/>
+									</p>
+								</figure>
+								<MessageContent $isUser={message.author === "user"}>
+									<div className="content">
+										<p>{message.text}</p>
 									</div>
-								</article>
-							))}
+								</MessageContent>
+							</MessageBubble>
+						))}
 
-						{buttons.length > 0 && (
-							<div className="landbot-buttons-container">
-								{buttons.map((button) => (
-									<button
-										key={button.id}
-										className="landbot-option-button"
-										onClick={() => handleClick(button.text, button.payload)}
-									>
-										{button.text}
-									</button>
-								))}
-							</div>
-						)}
-					</div>
-
-					<div className="landbot-input-container">
-						<div className="field">
-							<div className="control">
-								<input
-									className="landbot-input"
-									onChange={(e) => setInput(e.target.value)}
-									onKeyUp={(e) => {
-										if (e.key === "Enter") {
-											e.preventDefault();
-											submit();
-										}
-									}}
-									placeholder="Type here..."
-									type="text"
-									value={input}
-								/>
-								<button
-									className="button landbot-input-send"
-									disabled={input === ""}
-									onClick={submit}
-									type="button"
+					{buttons.length > 0 && (
+						<ButtonsContainer>
+							{buttons.map((button) => (
+								<OptionButton
+									key={button.id}
+									className="landbot-option-button"
+									onClick={() => handleClick(button.text, button.payload)}
 								>
-									<span className="icon is-large" style={{ fontSize: 25 }}>
-										➤
-									</span>
-								</button>
-							</div>
+									{button.text}
+								</OptionButton>
+							))}
+						</ButtonsContainer>
+					)}
+				</MessagesContainer>
+
+				<InputContainer>
+					<div className="field">
+						<div className="control">
+							<Input
+								className="landbot-input"
+								onChange={(e) => setInput(e.target.value)}
+								onKeyUp={(e) => {
+									if (e.key === "Enter") {
+										e.preventDefault();
+										submit();
+									}
+								}}
+								placeholder="Type here..."
+								type="text"
+								value={input}
+							/>
+							<SendButton
+								disabled={input === ""}
+								onClick={submit}
+								type="button"
+							>
+								<span className="icon is-large" style={{ fontSize: 25 }}>
+									➤
+								</span>
+							</SendButton>
 						</div>
 					</div>
-				</div>
-			</div>
-		</section>
+				</InputContainer>
+			</ChatWrapper>
+		</ChatContainer>
 	);
 });

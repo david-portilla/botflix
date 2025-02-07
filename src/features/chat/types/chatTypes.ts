@@ -1,5 +1,15 @@
 import { Message } from "@landbot/core/dist/src/types";
 
+export interface ExtendedMessage extends Message {
+	rich_text?: string;
+	title?: string;
+	samurai?: string | number;
+	author_type?: string;
+	buttons?: string[];
+	payloads?: string[];
+	url?: string;
+}
+
 /**
  * Interface for chat message structure
  */

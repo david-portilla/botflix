@@ -8,7 +8,7 @@ export const emotionToGenreMap: Record<string, EmotionGenre> = {
 	"😢 Sad": { id: 35, label: "Sad" },
 	"😴 Bored": { id: 28, label: "Bored" },
 	"😌 Relaxed": { id: 16, label: "Relaxed" },
-	"😃 Happy": { id: 14, label: "In Love" },
+	"😃 Happy": { id: 14, label: "Happy" },
 	"❤️ In Love": { id: 10749, label: "In Love" },
 };
 

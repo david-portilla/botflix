@@ -15,7 +15,7 @@ export const useMovie = (id: string) => {
 	return useQuery<Movie>({
 		queryKey: ["movie", id],
 		queryFn: async () => {
-			const response = await fetch(handleURL(id));
+			const response = await fetch(handleURL(id, 1, true));
 			if (!response.ok) {
 				throw new Error("Network error: " + response.status);
 			}

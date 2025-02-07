@@ -1,12 +1,8 @@
 export interface MovieGridProps {
-	term: string;
-}
-
-export interface PaginationProps {
-	page: number;
-	total_pages: number;
-	onPreviousPage: () => void;
-	onNextPage: () => void;
+	term: {
+		id: number;
+		label: string;
+	};
 }
 
 export const MoviesQueryKeys = {

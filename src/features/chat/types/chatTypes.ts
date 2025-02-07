@@ -6,6 +6,8 @@ import { Message } from "@landbot/core/dist/src/types";
 export interface ChatMessage {
 	key: string;
 	text?: string;
+	richText?: string;
+	url?: string;
 	author: "bot" | "user";
 	timestamp: number;
 	type: string;

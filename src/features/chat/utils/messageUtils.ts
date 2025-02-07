@@ -1,21 +1,22 @@
 import { Message } from "@landbot/core/dist/src/types";
-import { ChatMessage } from "../types/chatTypes";
+import { ChatMessage, ExtendedMessage } from "../types/chatTypes";
 
 /**
  * Parses a raw message into the internal ChatMessage format
  * @param {Message} data - Raw message data from the bot
  * @returns {ChatMessage} Formatted chat message
  */
-export function parseMessage(data: Message): ChatMessage {
+export function parseMessage(data: ExtendedMessage): ChatMessage {
 	return {
 		key: data.key,
 		text: data.title || data.message,
+		richText: data.rich_text,
+		url: data.url,
 		author: data.samurai !== undefined ? "bot" : "user",
 		timestamp: data.timestamp,
 		type: data.type,
 	};
 }
-
 /**
  * Converts an object of messages into the internal format
  * @param {Record<string, Message>} messages - Object containing messages
@@ -40,7 +41,7 @@ export function parseMessages(
  */
 export function messagesFilter(data: ChatMessage) {
 	/** Support for basic message types */
-	return ["text", "dialog"].includes(data.type);
+	return ["text", "dialog", "image"].includes(data.type);
 }
 
 /**

@@ -1,5 +1,6 @@
 import { useState, ReactNode, useCallback } from "react";
 import { GlobalContext } from "../providers/GlobalContext";
+import { EmotionGenre } from "../../features/chat/utils/genreMap";
 
 interface GlobalProviderProps {
 	children: ReactNode;
@@ -20,36 +21,28 @@ interface GlobalProviderProps {
  */
 export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 	const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
-	const [displayFeeling, setDisplayFeeling] = useState<string>("");
+	const [displayFeeling, setDisplayFeeling] = useState<EmotionGenre>({
+		id: 0,
+		label: "",
+	});
 	const [displayChatInput, setDisplayChatInput] = useState<string>("");
 
 	/**
-	 * Opens the chat modal if it's not already open
+	 * Toggles the chat modal state
 	 * @memoized
 	 */
-	const openChat = useCallback(() => {
-		if (!isChatOpen) {
-			setIsChatOpen(true);
-		}
-	}, [isChatOpen]);
-
-	/**
-	 * Closes the chat modal and resets user information
-	 * @memoized
-	 */
-	const closeChat = useCallback(() => {
-		if (isChatOpen) {
-			setIsChatOpen(false);
-		}
-	}, [isChatOpen]);
+	const toggleChat = useCallback(() => {
+		setIsChatOpen((prev) => !prev);
+	}, []);
 
 	/**
 	 * Updates the user name in both ref and state
-	 * @param {string} name - The new user name to set
+	 * @param {string} id - The new user id to set
+	 * @param {string} label - The new user label to set
 	 * @memoized
 	 */
-	const setFeelingName = useCallback((name: string) => {
-		setDisplayFeeling(name.trim());
+	const setFeelingName = useCallback((id: number, label: string) => {
+		setDisplayFeeling({ id, label });
 	}, []);
 
 	/**
@@ -58,15 +51,14 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
 	 * @memoized
 	 */
 	const setChatInput = useCallback((input: string) => {
-		setDisplayChatInput(input.trim());
+		setDisplayChatInput(input);
 	}, []);
 
 	return (
 		<GlobalContext.Provider
 			value={{
 				isChatOpen,
-				openChat,
-				closeChat,
+				toggleChat,
 				displayFeeling,
 				setFeelingName,
 				displayChatInput,

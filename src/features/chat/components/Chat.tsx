@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Core from "@landbot/core";
-import { InitializationData } from "@landbot/core/dist/src/types";
+import { ConfigProperties } from "@landbot/core/dist/src/types";
 import { useGlobal } from "../../../app/hooks/useGlobal";
 import { ChatMessage, ChatButton, LiveChatMessage } from "../types/chatTypes";
 import {
@@ -9,6 +9,7 @@ import {
 	messagesFilter,
 	scrollBottom,
 } from "../utils/messageUtils";
+import { getGenreFromEmotion } from "../utils/genreMap";
 
 import {
 	ChatContainer,
@@ -43,47 +44,20 @@ import {
 export const Chat = React.memo(() => {
 	const [messages, setMessages] = useState<Record<string, ChatMessage>>({});
 	const [input, setInput] = useState("");
-	const [config, setConfig] = useState(null);
+	const [config, setConfig] = useState<ConfigProperties | undefined>(undefined);
 	const [buttons, setButtons] = useState<ChatButton[]>([]);
 	const core = useRef<Core | null>(null);
-	const { closeChat, setFeelingName, setChatInput } = useGlobal();
-
-	const initializeCore = useCallback(() => {
-		if (config && !core.current) {
-			core.current = new Core(config);
-		}
-	}, [config]);
+	const { toggleChat, setFeelingName, setChatInput } = useGlobal();
 
 	const destroyBot = useCallback(() => {
+		setMessages({});
+		setButtons([]);
+		setInput("");
 		if (core.current) {
-			setMessages({});
-			setButtons([]);
 			core.current.destroy();
 			core.current = null;
 		}
 	}, []);
-
-	/**
-	 * Handles successful bot initialization
-	 * @param {InitializationData} data - Initial data from the bot
-	 * @memoized
-	 */
-	const handleCoreInitSuccess = useCallback((data: InitializationData) => {
-		setMessages(parseMessages(data.messages));
-	}, []);
-
-	/**
-	 * Handles bot initialization errors
-	 * @param {Error} error - Error object from initialization
-	 * @memoized
-	 */
-	const handleCoreInitError = useCallback(
-		(error: Error) => {
-			console.error("Error initializing core:", error);
-			destroyBot();
-		},
-		[destroyBot]
-	);
 
 	/**
 	 * Subscribes to bot message pipeline and handles incoming messages
@@ -94,12 +68,12 @@ export const Chat = React.memo(() => {
 			core.current.pipelines.$readableSequence.subscribe(
 				(data: LiveChatMessage) => {
 					// ! TODO: remove this console.log before production
-					console.log(
-						data.author_type
-							? `${data.author_type} response:`
-							: "samurai response:",
-						data
-					);
+					// console.log(
+					// 	data.author_type
+					// 		? `${data.author_type} response:`
+					// 		: "samurai response:",
+					// 	data
+					// );
 
 					setMessages((messages) => ({
 						...messages,
@@ -119,41 +93,33 @@ export const Chat = React.memo(() => {
 					}
 
 					// Handle chat completion
-					if (data.action === "finish" && data.author_type === "bot") {
-						closeChat();
+					if (data.action === "finish") {
+						toggleChat();
 						destroyBot();
 					}
 				}
 			);
 		}
-	}, [closeChat, destroyBot]);
+	}, [toggleChat, destroyBot]);
 
 	/**
 	 * Initializes the bot and sets up message handling
 	 * @memoized
 	 */
 	const initBot = useCallback(async () => {
-		initializeCore();
+		if (config) core.current = new Core(config);
 
 		if (core.current) {
 			try {
 				const data = await core.current.init();
-				handleCoreInitSuccess(data);
+				// TODO: review this
+				setMessages(parseMessages(data.messages));
 				subscribeToPipeline();
 			} catch (error) {
-				if (error instanceof Error) {
-					handleCoreInitError(error);
-				} else {
-					console.error("Unknown error initializing core:", error);
-				}
+				console.error("Error initializing core:", error);
 			}
 		}
-	}, [
-		initializeCore,
-		handleCoreInitSuccess,
-		handleCoreInitError,
-		subscribeToPipeline,
-	]);
+	}, [config, subscribeToPipeline]);
 
 	const fetchConfig = useCallback(async (url: string) => {
 		try {
@@ -185,10 +151,8 @@ export const Chat = React.memo(() => {
 	 */
 	const submit = useCallback(() => {
 		if (input !== "" && core.current) {
-			setFeelingName(input);
 			core.current.sendMessage({ message: input });
-			setInput(input);
-			setChatInput(input);
+			setInput("");
 		}
 	}, [input, setFeelingName]);
 
@@ -212,6 +176,7 @@ export const Chat = React.memo(() => {
 				[currentUserMessage.key]: currentUserMessage,
 			}));
 
+			// ! TODO: remove this after testing
 			core.current.sendMessage({
 				type: "button",
 				message: currentUserMessage.text,
@@ -219,6 +184,9 @@ export const Chat = React.memo(() => {
 				custom_data: {},
 			});
 
+			const genre = getGenreFromEmotion(buttonValue);
+			if (genre) setFeelingName(genre.id, genre.label);
+			setChatInput(genre?.label || "");
 			setButtons([]);
 		}
 	};
@@ -252,7 +220,19 @@ export const Chat = React.memo(() => {
 								</figure>
 								<MessageContent $isUser={message.author === "user"}>
 									<div className="content">
-										<p>{message.text}</p>
+										{message.type === "image" && message.url ? (
+											<img
+												src={message.url}
+												alt="GIF"
+												style={{ maxWidth: "100%" }}
+											/>
+										) : message.richText ? (
+											<div
+												dangerouslySetInnerHTML={{ __html: message.richText }}
+											/>
+										) : (
+											<p>{message.text}</p>
+										)}
 									</div>
 								</MessageContent>
 							</MessageBubble>

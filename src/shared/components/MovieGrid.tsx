@@ -6,7 +6,11 @@ import { MainContainer } from "./MovieGrid.styles";
 import { MovieCard } from "./MovieCard";
 
 export const MovieGrid = ({ term }: MovieGridProps) => {
-	const { data, error, isLoading } = useMovies(handleURL(term));
+	const { data, error, isLoading } = useMovies(
+		term.id === 0
+			? handleURL(term.label) // Search by text
+			: handleURL(term.id.toString()) // Search by genre ID
+	);
 
 	if (isLoading) return <Loading />;
 	if (error)
@@ -22,24 +26,29 @@ export const MovieGrid = ({ term }: MovieGridProps) => {
 				{data && (
 					<>
 						<header className="mb-8">
-							{term.trim().length === 0 ? (
+							{term.label.trim().length === 0 ? (
 								<h1 className="text-3xl font-bold text-white">
 									Popular Movies
 								</h1>
-							) : (
+							) : !term.id ? (
 								data.results.length > 0 && (
 									<h1 className="text-3xl font-bold text-white">
-										Showing movies by feeling:{" "}
-										<span className="text-red-500">{term}</span>
+										Search results for:{" "}
+										<span className="text-red-500">{term.label}</span>
 									</h1>
 								)
+							) : (
+								<h1 className="text-3xl font-bold text-white">
+									Showing movies by mood:{" "}
+									<span className="text-red-500">{term.label}</span>
+								</h1>
 							)}
 						</header>
 
 						{data.results.length === 0 ? (
 							<p className="text-xl text-center text-gray-400 mt-12">
 								No results found for:{" "}
-								<span className="font-semibold">{term}</span>
+								<span className="font-semibold text-red-500">{term.label}</span>
 							</p>
 						) : (
 							<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">

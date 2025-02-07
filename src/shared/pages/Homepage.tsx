@@ -8,8 +8,8 @@ import { useGlobal } from "../../app/hooks/useGlobal";
 import { CloseIcon, OpenIcon } from "./Homepage.styles";
 
 export const Homepage = () => {
-	const { openChat, closeChat, isChatOpen, displayFeeling } = useGlobal();
-	const handleToggleChat = () => (isChatOpen ? closeChat() : openChat());
+	const { toggleChat, isChatOpen, displayFeeling } = useGlobal();
+	const handleToggleChat = () => toggleChat();
 	const chatComponent = useMemo(() => isChatOpen && <Chat />, [isChatOpen]);
 
 	return (

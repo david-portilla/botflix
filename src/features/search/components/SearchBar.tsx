@@ -15,10 +15,11 @@ export const SearchBar = () => {
 		setChatInput(value);
 
 		if (!value.trim()) {
-			setFeelingName("");
+			setFeelingName(0, "");
 			return;
 		}
-		setFeelingName(value);
+		// For direct search, we use 0 as ID to indicate it's a text search
+		setFeelingName(0, value);
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

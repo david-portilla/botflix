@@ -30,7 +30,11 @@ export const MovieDetails = () => {
 				<div className="relative">
 					<GradientOverlay />
 					<img
-						src={`${import.meta.env.VITE_IMAGE_POSTER}${movie.backdrop_path}`}
+						src={
+							movie.poster_path
+								? `${import.meta.env.VITE_IMAGE_COVER}${movie.poster_path}`
+								: "https://picsum.photos/300/450"
+						}
 						alt=""
 						className="w-full h-[100vh] object-cover opacity-40"
 						aria-hidden="true"
@@ -64,7 +68,11 @@ export const MovieDetails = () => {
 							<div className="flex flex-col md:flex-row gap-8 items-start pt-[2vh]">
 								<div className="shrink-0 w-full md:w-[300px] relative z-10">
 									<img
-										src={`${import.meta.env.VITE_IMAGE_POSTER}${movie.poster_path}`}
+										src={
+											movie.poster_path
+												? `${import.meta.env.VITE_IMAGE_COVER}${movie.poster_path}`
+												: "https://picsum.photos/300/450"
+										}
 										alt={`Movie poster of ${movie.title}`}
 										className="w-full rounded-lg shadow-2xl ring-1 ring-white/10 hover:ring-white/30 transition-all"
 									/>

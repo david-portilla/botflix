@@ -1,36 +1,35 @@
-import { Message } from "@landbot/core/dist/src/types";
-import { ChatMessage, ExtendedMessage } from "../types/chatTypes";
+import { LiveChatMessage, UI_Message } from "../types/chatTypes";
 
 /**
  * Parses a raw message into the internal ChatMessage format
- * @param {Message} data - Raw message data from the bot
- * @returns {ChatMessage} Formatted chat message
+ * @param data - Raw message data from the bot
+ * @returns Formatted chat message
  */
-export function parseMessage(data: ExtendedMessage): ChatMessage {
+export function parseMessage(data: LiveChatMessage): UI_Message {
 	return {
 		key: data.key,
-		text: data.title || data.message,
-		richText: data.rich_text,
-		url: data.url,
-		author: data.samurai !== undefined ? "bot" : "user",
+		text: data.message || "",
+		rich_text: "rich_text" in data ? data.rich_text : undefined,
+		url: "url" in data ? data.url : undefined,
+		author: data.author_type,
 		timestamp: data.timestamp,
 		type: data.type,
 	};
 }
 /**
  * Converts an object of messages into the internal format
- * @param {Record<string, Message>} messages - Object containing messages
- * @returns {Record<string, ChatMessage>} Formatted messages object
+ * @param messages - Object containing messages
+ * @returns Formatted messages object
  */
 export function parseMessages(
-	messages: Record<string, Message>
-): Record<string, ChatMessage> {
-	return Object.values(messages).reduce(
-		(obj, next) => {
-			obj[next.key] = parseMessage(next);
-			return obj;
-		},
-		{} as Record<string, ChatMessage>
+	messages: Record<string, LiveChatMessage>
+): Record<string, UI_Message> {
+	return Object.entries(messages).reduce(
+		(obj, [key, message]) => ({
+			...obj,
+			[key]: parseMessage(message),
+		}),
+		{} as Record<string, UI_Message>
 	);
 }
 
@@ -39,8 +38,7 @@ export function parseMessages(
  * @param {ChatMessage} data - Message to filter
  * @returns {boolean} Whether the message should be displayed
  */
-export function messagesFilter(data: ChatMessage) {
-	/** Support for basic message types */
+export function messagesFilter(data: UI_Message) {
 	return ["text", "dialog", "image"].includes(data.type);
 }
 

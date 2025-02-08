@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const HeaderContainer = styled.header`
 	background: var(--background-secondary);
 	border-bottom: 1px solid var(--border-color);
-	height: var(--header-height);
+	min-height: var(--header-height);
 	box-shadow: var(--header-shadow);
 	position: sticky;
 	top: 0;
@@ -31,7 +31,7 @@ export const HeaderContainer = styled.header`
 `;
 
 export const HeaderContent = styled.div`
-	height: var(--header-height);
+	min-height: var(--header-height);
 	display: flex;
 	flex-direction: column;
 	align-items: center;

@@ -1,4 +1,13 @@
-# **Botflix**
+<div align="center">
+  <h1> Botflix - Movie AI Consultant </h1>
+  <br><br>
+  <img src=".github/botflix.png">
+  <br>
+  <br>
+  <p> Final result </p>
+  <p><strong> https://botflix.vercel.app/ </strong></p>
+  <br>
+</div>
 
 ## **📖 Description**
 

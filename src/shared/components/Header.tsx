@@ -21,8 +21,20 @@ export const Header = () => {
 					<NavLink to="/" aria-current="page">
 						Home
 					</NavLink>
-					<NavLink to="/#">Movies</NavLink>
-					<NavLink to="/#">About</NavLink>
+					<NavLink
+						to="https://www.themoviedb.org/"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Movie API
+					</NavLink>
+					<NavLink
+						to="https://davidportilla.com/"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						About
+					</NavLink>
 				</NavLinks>
 
 				<ApiInfo>

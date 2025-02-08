@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Chat } from "../../features/chat/components/Chat";
@@ -10,7 +9,6 @@ import { CloseIcon, OpenIcon } from "./Homepage.styles";
 export const Homepage = () => {
 	const { toggleChat, isChatOpen, displayFeeling } = useGlobal();
 	const handleToggleChat = () => toggleChat();
-	const chatComponent = useMemo(() => isChatOpen && <Chat />, [isChatOpen]);
 
 	return (
 		<>
@@ -23,7 +21,7 @@ export const Homepage = () => {
 			>
 				{isChatOpen ? <CloseIcon /> : <OpenIcon />}
 			</button>
-			{chatComponent}
+			{isChatOpen && <Chat />}
 			<MovieGrid term={displayFeeling} />
 			<Footer />
 		</>

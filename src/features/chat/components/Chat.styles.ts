@@ -2,9 +2,10 @@ import styled from "styled-components";
 
 export const ChatContainer = styled.section`
 	position: fixed;
-	bottom: 24px;
-	right: 84px;
-	width: 425px;
+	bottom: 100px;
+	right: 25px;
+	max-width: 425px;
+	width: calc(100% - 50px);
 	height: calc(70vh - 100px);
 	min-height: 400px;
 	max-height: 700px;
@@ -99,14 +100,14 @@ export const MessageBubble = styled.article<{ $isUser?: boolean }>`
 `;
 
 export const MessageContent = styled.div<{ $isUser?: boolean }>`
-  padding: 12px 16px;
-  border-radius: 12px;
-  color: var(--text-primary);
-  max-width: 80%;
-  background-color: ${(props) => (props.$isUser ? "var(--botflix-color)" : "var(--background-primary)")};
-  border-bottom-${(props) => (props.$isUser ? "right" : "left")}-radius: 4px;
-  font-size: 0.95rem;
-  line-height: 1.4;
+	padding: 12px 16px;
+	border-radius: 12px;
+	color: var(--text-primary);
+	max-width: 80%;
+	background-color: ${(props) => (props.$isUser ? "var(--botflix-color-dark)" : "var(--background-primary)")};
+	border-bottom-${(props) => (props.$isUser ? "right" : "left")}-radius: 4px;
+	font-size: 0.95rem;
+	line-height: 1.4;
 `;
 
 export const InputContainer = styled.div`

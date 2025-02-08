@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Core from "@landbot/core";
 import { ConfigProperties } from "@landbot/core/dist/src/types";
 import { useGlobal } from "../../../app/hooks/useGlobal";
-import { ChatMessage, ChatButton, LiveChatMessage } from "../types/chatTypes";
+import { UI_Message, ChatButton, LiveChatMessage } from "../types/chatTypes";
 import {
 	parseMessage,
 	parseMessages,
@@ -42,14 +42,19 @@ import {
  * ```
  */
 export const Chat = React.memo(() => {
-	const [messages, setMessages] = useState<Record<string, ChatMessage>>({});
+	const [messages, setMessages] = useState<Record<string, UI_Message>>({});
 	const [input, setInput] = useState("");
 	const [config, setConfig] = useState<ConfigProperties | undefined>(undefined);
 	const [buttons, setButtons] = useState<ChatButton[]>([]);
 	const core = useRef<Core | null>(null);
 	const { toggleChat, setFeelingName, setChatInput } = useGlobal();
 
+	/**
+	 * Destroys the bot and resets the state
+	 * @memoized
+	 */
 	const destroyBot = useCallback(() => {
+		console.log("destroyBot");
 		setMessages({});
 		setButtons([]);
 		setInput("");
@@ -67,33 +72,32 @@ export const Chat = React.memo(() => {
 		if (core.current) {
 			core.current.pipelines.$readableSequence.subscribe(
 				(data: LiveChatMessage) => {
-					// ! TODO: remove this console.log before production
-					// console.log(
-					// 	data.author_type
-					// 		? `${data.author_type} response:`
-					// 		: "samurai response:",
-					// 	data
-					// );
-
 					setMessages((messages) => ({
 						...messages,
 						[data.key]: parseMessage(data),
 					}));
 
 					// Handle button options if present
-					if (Array.isArray(data.buttons) && Array.isArray(data.payloads)) {
+					if ("buttons" in data && Array.isArray(data.buttons)) {
 						const buttonData: ChatButton[] = data.buttons.map(
 							(text: string, index: number) => ({
 								id: `btn-${index}-${data.key}`,
 								text,
 								payload: data.payloads?.[index] || "",
+								link: data.urls?.[index] || "",
+								timestamp: data.timestamp,
 							})
 						);
 						setButtons(buttonData);
 					}
 
-					// Handle chat completion
-					if (data.action === "finish") {
+					// Handle finish action
+					if (
+						data.type === "hidden" &&
+						"action" in data &&
+						data.action === "finish"
+					) {
+						console.log("finish!");
 						toggleChat();
 						destroyBot();
 					}
@@ -112,8 +116,23 @@ export const Chat = React.memo(() => {
 		if (core.current) {
 			try {
 				const data = await core.current.init();
-				// TODO: review this
-				setMessages(parseMessages(data.messages));
+				const transformedMessages = Object.entries(data.messages).reduce(
+					(acc, [key, message]) => ({
+						...acc,
+						[key]: {
+							...message,
+							author_type: "bot",
+							uuid: message.id,
+							channel: 0,
+							chat: 0,
+							read: false,
+							author_uuid: "",
+							extra: {},
+						} as LiveChatMessage,
+					}),
+					{} as Record<string, LiveChatMessage>
+				);
+				setMessages(parseMessages(transformedMessages));
 				subscribeToPipeline();
 			} catch (error) {
 				console.error("Error initializing core:", error);
@@ -121,6 +140,10 @@ export const Chat = React.memo(() => {
 		}
 	}, [config, subscribeToPipeline]);
 
+	/**
+	 * Fetches the bot configuration
+	 * @memoized
+	 */
 	const fetchConfig = useCallback(async (url: string) => {
 		try {
 			const response = await fetch(url);
@@ -154,18 +177,20 @@ export const Chat = React.memo(() => {
 			core.current.sendMessage({ message: input });
 			setInput("");
 		}
-	}, [input, setFeelingName]);
+	}, [input]);
 
 	/**
 	 * Handles button click events
 	 * @param {string} buttonValue - Text of the clicked button
 	 * @param {string} payload - Action payload for the button
 	 */
-	const handleClick = (buttonValue: string, payload: string) => {
+	const handleClick = (button: ChatButton) => {
+		const { text, payload, link } = button;
+
 		if (core.current) {
-			const currentUserMessage: ChatMessage = {
+			const currentUserMessage: UI_Message = {
 				key: `user-${Date.now()}`,
-				text: buttonValue,
+				text: text,
 				author: "user",
 				timestamp: Date.now(),
 				type: "text",
@@ -176,7 +201,6 @@ export const Chat = React.memo(() => {
 				[currentUserMessage.key]: currentUserMessage,
 			}));
 
-			// ! TODO: remove this after testing
 			core.current.sendMessage({
 				type: "button",
 				message: currentUserMessage.text,
@@ -184,15 +208,39 @@ export const Chat = React.memo(() => {
 				custom_data: {},
 			});
 
-			const genre = getGenreFromEmotion(buttonValue);
-			if (genre) setFeelingName(genre.id, genre.label);
-			setChatInput(genre?.label || "");
+			text && getMoodies(text);
+			link && talkToAgent(link);
 			setButtons([]);
 		}
 	};
 
+	/**
+	 * Fetches moodies from the API
+	 * @param {string} genre - Genre of the moodie
+	 */
+	const getMoodies = async (genre: string) => {
+		const moodie = getGenreFromEmotion(genre);
+		const delay = (ms: number) =>
+			new Promise((resolve) => setTimeout(resolve, ms));
+
+		if (moodie) {
+			await delay(4000);
+			setFeelingName(moodie.id, moodie.label);
+			setChatInput(moodie?.label || "");
+		}
+	};
+
+	/**
+	 * Opens a new window to the agent
+	 * @param {string} link - Link to the agent
+	 */
+	const talkToAgent = (link: string) => {
+		if (link?.includes("wa.me"))
+			window.open(link, "_blank noopener noreferrer");
+	};
+
 	return (
-		<ChatContainer>
+		<ChatContainer aria-label="Chat section" role="region">
 			<ChatWrapper>
 				<ChatHeader>
 					<h1 className="subtitle">Movie AI Consultant</h1>
@@ -207,33 +255,37 @@ export const Chat = React.memo(() => {
 								data-author={message.author}
 								$isUser={message.author === "user"}
 								key={message.key}
+								role="note"
+								aria-label={`Message from ${message.author}`}
 							>
-								{/* ! TODO: remove this avatar */}
 								<figure className="media-left landbot-message-avatar">
 									<p className="image is-64x64">
 										<img
 											alt=""
 											className="is-rounded"
-											src="http://i.pravatar.cc/100"
+											src={
+												message.author === "user"
+													? "https://avatar.iran.liara.run/public/20"
+													: "https://avatar.iran.liara.run/public/job/operator/male"
+											}
 										/>
 									</p>
 								</figure>
 								<MessageContent $isUser={message.author === "user"}>
-									<div className="content">
-										{message.type === "image" && message.url ? (
-											<img
-												src={message.url}
-												alt="GIF"
-												style={{ maxWidth: "100%" }}
-											/>
-										) : message.richText ? (
-											<div
-												dangerouslySetInnerHTML={{ __html: message.richText }}
-											/>
-										) : (
-											<p>{message.text}</p>
-										)}
-									</div>
+									{message.type === "image" && message.url ? (
+										<img
+											src={message.url}
+											alt="GIF"
+											style={{ maxWidth: "100%" }}
+										/>
+									) : message.rich_text ? (
+										<div
+											className="rich-text"
+											dangerouslySetInnerHTML={{ __html: message.rich_text }}
+										/>
+									) : (
+										<p>{message.text}</p>
+									)}
 								</MessageContent>
 							</MessageBubble>
 						))}
@@ -244,7 +296,7 @@ export const Chat = React.memo(() => {
 								<OptionButton
 									key={button.id}
 									className="landbot-option-button"
-									onClick={() => handleClick(button.text, button.payload)}
+									onClick={() => handleClick(button)}
 								>
 									{button.text}
 								</OptionButton>

@@ -13,7 +13,11 @@ export const MovieCard = ({ movie }: { movie: Movie }) => {
 			>
 				<div className="relative aspect-[2/3] bg-gray-900">
 					<img
-						src={`${import.meta.env.VITE_IMAGE_POSTER}${movie.poster_path}`}
+						src={
+							movie.poster_path
+								? `${import.meta.env.VITE_IMAGE_COVER}${movie.poster_path}`
+								: "https://picsum.photos/200/300"
+						}
 						alt={`${movie.title} poster`}
 						className="w-full h-full object-cover"
 						loading="lazy"

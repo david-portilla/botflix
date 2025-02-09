@@ -8,7 +8,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["jest"]
+    "types": ["jest"],
+    "noEmit": true,
   },
   "include": ["src", "src/global.d.ts", "jest.setup.js"]
 }

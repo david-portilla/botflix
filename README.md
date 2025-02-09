@@ -24,7 +24,7 @@ Check out the live version of the app:
 
 ## 📚 Documentation
 
-👉 [Project Overview](/docs/project-overview.md)
+👉 [Project Overview](src/docs/project-overview.md)
 
 ## **📜 Prerequisites**
 

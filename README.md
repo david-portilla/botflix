@@ -5,7 +5,7 @@
   <br>
   <br>
   <p> Final result </p>
-  <p><strong> https://botflix.vercel.app/ </strong></p>
+    <p><strong><a href="https://botflix.vercel.app/" target="_blank" rel="noopener noreferrer">https://botflix.vercel.app/</a></strong></p>
   <br>
 </div>
 
@@ -17,14 +17,14 @@ Botflix is a movie search app that integrates with a bot to search for movies ba
 
 ## **🚀 Final Result**
 
-Check out the live version of the app:\
+Check out the live version of the app:
 👉 [botflix.vercel.app](https://botflix.vercel.app/)
 
 ---
 
-## 📚 Additional Docs
+## 📚 Documentation
 
-- TODO: Discuss the creative process and solution approach.
+👉 [Project Overview](/docs/project-overview.md)
 
 ## **📜 Prerequisites**
 
@@ -42,6 +42,7 @@ Check out the live version of the app:\
 
 ## **📂 Folder Structure**
 
+```
 botflix/
 │
 ├── docs/
@@ -76,6 +77,7 @@ botflix/
 │ └── images/
 │
 └── README.md
+```
 
 - `app/`: Contains global configuration and providers for the application.
 - `features/`: Main application domains, each with its components, hooks, services, etc.

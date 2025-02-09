@@ -2,8 +2,8 @@ import { LiveChatMessage, UI_Message } from "../types/chatTypes";
 
 /**
  * Parses a raw message into the internal ChatMessage format
- * @param data - Raw message data from the bot
- * @returns Formatted chat message
+ * @param {LiveChatMessage} data - Raw message data from the bot
+ * @returns {UI_Message} Formatted chat message
  */
 export function parseMessage(data: LiveChatMessage): UI_Message {
 	return {
@@ -11,15 +11,15 @@ export function parseMessage(data: LiveChatMessage): UI_Message {
 		text: data.message || "",
 		rich_text: "rich_text" in data ? data.rich_text : undefined,
 		url: "url" in data ? data.url : undefined,
-		author: data.author_type,
+		author_type: data.author_type || "bot",
 		timestamp: data.timestamp,
 		type: data.type,
 	};
 }
 /**
  * Converts an object of messages into the internal format
- * @param messages - Object containing messages
- * @returns Formatted messages object
+ * @param {Record<string, LiveChatMessage>} messages - Object containing messages
+ * @returns {Record<string, UI_Message>} Formatted messages object
  */
 export function parseMessages(
 	messages: Record<string, LiveChatMessage>
@@ -35,7 +35,7 @@ export function parseMessages(
 
 /**
  * Filters messages based on supported types
- * @param {ChatMessage} data - Message to filter
+ * @param {UI_Message} data - Message to filter
  * @returns {boolean} Whether the message should be displayed
  */
 export function messagesFilter(data: UI_Message) {

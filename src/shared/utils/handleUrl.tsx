@@ -2,7 +2,6 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export function handleURL(term: string, page = 1, isMovieId = false) {
-	//TODO: Add movies by genre (feelings, emotions, etc.)
 	if (!term || term === "0") {
 		return `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
 	}

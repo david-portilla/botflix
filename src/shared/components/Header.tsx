@@ -16,13 +16,12 @@ export const Header = () => {
 					<img src={botflixLogo} alt="Botflix Logo" />
 				</Logo>
 
-				{/* TODO: Add links to the pages */}
 				<NavLinks aria-label="Main navigation">
 					<NavLink to="/" aria-current="page">
 						Home
 					</NavLink>
 					<NavLink
-						to="https://www.themoviedb.org/"
+						to="https://developer.themoviedb.org/docs/getting-started/"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -38,7 +37,16 @@ export const Header = () => {
 				</NavLinks>
 
 				<ApiInfo>
-					powered by <strong>themoviedb API</strong>
+					Powered by{" "}
+					<strong>
+						<NavLink
+							to="https://www.themoviedb.org/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							themoviedb API
+						</NavLink>
+					</strong>
 				</ApiInfo>
 			</HeaderContent>
 		</HeaderContainer>

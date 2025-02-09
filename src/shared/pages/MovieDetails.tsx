@@ -26,13 +26,13 @@ export const MovieDetails = () => {
 	return (
 		<>
 			<Header />
-			<section className=" bg-[#1a1a1a]">
+			<section className="bg-[#1a1a1a]">
 				<div className="relative">
 					<GradientOverlay />
 					<img
 						src={
 							movie.poster_path
-								? `${import.meta.env.VITE_IMAGE_COVER}${movie.poster_path}`
+								? `${import.meta.env.VITE_IMAGE_POSTER}${movie.poster_path}`
 								: "https://picsum.photos/300/450"
 						}
 						alt=""
@@ -45,10 +45,10 @@ export const MovieDetails = () => {
 							<button
 								onClick={() => navigate(-1)}
 								className="inline-flex items-center gap-2 px-4 py-2 mt-8 mb-4
-                       bg-black/30 hover:bg-black/50 backdrop-blur-sm
-                       text-white rounded-full transition-all duration-300
-                       border border-white/10 hover:border-white/20
-                       shadow-lg hover:shadow-xl"
+						bg-black/30 hover:bg-black/50 backdrop-blur-sm
+						text-white rounded-full transition-all duration-300
+						border border-white/10 hover:border-white/20
+						shadow-lg hover:shadow-xl"
 								aria-label="Back to home"
 							>
 								<svg

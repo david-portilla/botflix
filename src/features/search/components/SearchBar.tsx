@@ -1,3 +1,4 @@
+import { useGlobal } from "../../../app/hooks/useGlobal";
 import {
 	SearchForm,
 	SearchIcon,
@@ -5,7 +6,6 @@ import {
 	SearchMessage,
 	SearchSection,
 } from "./SearchBar.styles";
-import { useGlobal } from "../../../app/hooks/useGlobal";
 
 export const SearchBar = () => {
 	const { setFeelingName, displayChatInput, setChatInput } = useGlobal();
@@ -48,6 +48,9 @@ export const SearchBar = () => {
 							aria-label="Search movies"
 							autoComplete="off"
 							spellCheck="false"
+							minLength={3}
+							required
+							aria-required="true"
 						/>
 						<SearchIcon
 							xmlns="http://www.w3.org/2000/svg"
@@ -55,6 +58,7 @@ export const SearchBar = () => {
 							viewBox="0 0 24 24"
 							stroke="currentColor"
 							aria-hidden="true"
+							role="img"
 						>
 							<path
 								strokeLinecap="round"
@@ -66,11 +70,11 @@ export const SearchBar = () => {
 					</SearchForm>
 
 					{displayChatInput.trim().length === 0 ? (
-						<SearchMessage role="status">
+						<SearchMessage role="status" aria-live="polite">
 							Type to search for your favorite movies
 						</SearchMessage>
 					) : displayChatInput.trim().length < 3 ? (
-						<SearchMessage role="status">
+						<SearchMessage role="status" aria-live="polite">
 							Please enter at least 3 characters
 						</SearchMessage>
 					) : null}

@@ -1,26 +1,9 @@
-/**
- * Base message interface with common properties
- */
-interface BaseMessage {
-	id: string;
-	key: string;
-	uuid: string;
-	type: string;
-	timestamp: number;
-	channel: number;
-	chat: number;
-	author_type: "bot" | "user";
-	author_uuid: string;
-	message: string;
-	read: boolean;
-	ui_key: string | null;
-	extra: Record<string, any>;
-}
+import { Message } from "@landbot/core/dist/src/types";
 
 /**
  * Bot specific message properties
  */
-interface BotMessage extends BaseMessage {
+interface BotMessage extends Message {
 	author_type: "bot";
 	rich_text?: string;
 	samurai: number;
@@ -34,9 +17,9 @@ interface BotMessage extends BaseMessage {
 /**
  * User specific message properties
  */
-interface UserMessage extends BaseMessage {
-	author_type: "user";
-	readed_at: number;
+interface UserMessage extends Message {
+	author_type?: "user";
+	readed_at?: number;
 }
 
 /**
@@ -52,7 +35,7 @@ export interface UI_Message {
 	text: string;
 	rich_text?: string;
 	url?: string;
-	author: "bot" | "user";
+	author_type: "bot" | "user";
 	timestamp: number;
 	type: string;
 	payload?: string;
